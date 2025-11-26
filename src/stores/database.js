@@ -70,12 +70,12 @@ export const useDatabaseStore = defineStore("database", {
                 const docSpan = await getDoc(docRef);
 
                 if (!docSpan.exists()) {
-                    throw new Error("no existe el doc");
-                }
+                     throw new Error("no existe el doc");
+                 }
 
                 if (docSpan.data().user !== auth.currentUser.uid) {
                     throw new Error("no le pertenece ese documento");
-                }
+                 }
 
                 return docSpan.data().name;
             } catch (error) {
@@ -88,13 +88,13 @@ export const useDatabaseStore = defineStore("database", {
                 const docRef = doc(db, "urls", id);
 
                 const docSpan = await getDoc(docRef);
-                if (!docSpan.exists()) {
-                    throw new Error("no existe el doc");
-                }
+                 if (!docSpan.exists()) {
+                     throw new Error("no existe el doc");
+                 }
 
-                if (docSpan.data().user !== auth.currentUser.uid) {
-                    throw new Error("no le pertenece ese documento");
-                }
+                 if (docSpan.data().user !== auth.currentUser.uid) {
+                     throw new Error("no le pertenece ese documento");
+                 }
 
                 await updateDoc(docRef, {
                     name: name,
@@ -113,13 +113,13 @@ export const useDatabaseStore = defineStore("database", {
                 const docRef = doc(db, "urls", id);
 
                 const docSpan = await getDoc(docRef);
-                if (!docSpan.exists()) {
+                 if (!docSpan.exists()) {
                     throw new Error("no existe el doc");
-                }
+                 }
 
                 if (docSpan.data().user !== auth.currentUser.uid) {
-                    throw new Error("no le pertenece ese documento");
-                }
+                     throw new Error("no le pertenece ese documento");
+                 }
 
                 await deleteDoc(docRef);
                 this.documents = this.documents.filter(

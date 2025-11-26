@@ -15,8 +15,8 @@
 
     const userStore = useUserStore()
 
-    const email = ref('bluuweb1@test.com')
-    const password = ref('123123')
+    const email = ref('')
+    const password = ref('')
 
     const handleSubmit = async() => {
         if(!email.value || password.value.length < 6){

@@ -17,4 +17,21 @@
 <script setup>
 import {useUserStore} from './stores/user'
 const userStore = useUserStore()
+
+// import { onMounted } from "vue";
+// import { getAuth } from "firebase/auth";
+
+// onMounted(() => {
+//   const auth = getAuth();
+//   const user = auth.currentUser;
+
+//   if (user) {
+//     console.log("UID:", user.uid);
+//   } else {
+//     console.log("No hay usuario autenticado todavía");
+//   }
+// });
+
+
+
 </script>
