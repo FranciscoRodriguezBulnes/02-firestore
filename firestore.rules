@@ -1,0 +1,18 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /urls/{id} {
+      // Leer si está autenticado
+      allow read: if request.auth != null;
+
+      // Crear solo si el campo "user" coincide con el UID del usuario
+      allow create: if request.auth != null
+                    && request.auth.uid == request.resource.data.user;
+
+      // Actualizar y borrar solo si el documento pertenece al usuario
+      allow update, delete: if request.auth != null
+                            && request.auth.uid == resource.data.user;
+    }
+  }
+}
