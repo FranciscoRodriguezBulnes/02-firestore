@@ -1,28 +1,112 @@
 <template>
-    <div>
-        <h1>Login</h1>
-        <form @submit.prevent="handleSubmit">
-            <input type="email" placeholder="Ingrese email" v-model.trim="email">
-            <input type="password" placeholder="Ingrese contraseña" v-model.trim="password">
-            <button type="submit" :disabled="userStore.loadingUser">Acceso</button>
-        </form>
-    </div>
+  <h1 class="text-center">Login</h1>
+  <a-row>
+    <a-col
+      :xs="{ span: 24 }"
+      :sm="{ span: 12, offset: 6 }"
+    >
+      <a-form
+        name="basicLogin"
+        autocomplete="off"
+        layout="vertical"
+        :model="formState"
+        @finish="onFinish"
+        @finishFailed="onFinishFailed"
+      >
+        <a-form-item
+          name="email"
+          label="Introduce tu correo"
+          :rules="[
+            {
+              type: 'email',
+              required: true,
+              whitespace: true,
+              message: 'Por favor, introduce un correo correcto!',
+            },
+          ]"
+        >
+          <a-input v-model:value="formState.email"></a-input>
+        </a-form-item>
+
+        <a-form-item
+          name="password"
+          label="Introduce tu contraseña"
+          :rules="[
+            {
+              required: true,
+              min: 6,
+              whitespace: true,
+              message:
+                'Por favor, introduce tu contraseña con un mínimo de 6 caracteres',
+            },
+          ]"
+        >
+          <a-input-password v-model:value="formState.password" />
+        </a-form-item>
+
+        <a-form-item>
+          <a-button
+            type="primary"
+            html-type="submit"
+            :disabled="userStore.loadingUser"
+            :loading="userStore.loadingUser"
+            >Acceder</a-button
+          >
+        </a-form-item>
+      </a-form>
+    </a-col>
+  </a-row>
 </template>
 
 <script setup>
-    import { ref } from 'vue';
-    import {useUserStore} from '../stores/user'
+import { reactive, ref } from "vue";
+import { useUserStore } from "../stores/user";
+import { message } from "ant-design-vue";
 
-    const userStore = useUserStore()
+const userStore = useUserStore();
 
-    const email = ref('')
-    const password = ref('')
+const formState = reactive({
+  email: "frbacsa@gmail.com",
+  password: "jacobo1!",
+});
 
-    const handleSubmit = async() => {
-        if(!email.value || password.value.length < 6){
-            return alert('llena los campos')
-        }
-        await userStore.loginUser(email.value, password.value)
-    }
+// const email = ref("");
+// const password = ref("");
 
+// const handleSubmit = async () => {
+//   // if (!email.value || password.value.length <script 6) {
+//   //   return alert("llena los campos");
+//   // }
+
+// };
+
+const onFinish = async (values) => {
+  console.log("Success:", values);
+  const error = await userStore.loginUser(formState.email, formState.password);
+
+  if (!error) {
+    return message.success(
+      "Bienvenido al concierto, gracias por estar aquí 😃"
+    );
+  }
+
+  switch (error) {
+    case "auth/user-not-found":
+      // alert("No existe esa cuenta");
+      message.error("No exite el correo registrado 🤷‍♀️");
+      break;
+    case "auth/invalid-login-credentials":
+      message.error("Error de credenciales 🤦‍♀️");
+      // alert("auth/invalid-login-credentials");
+      break;
+    default:
+      message.error("Otro tipo de error 😒");
+      // alert("algo ha fallado distinto a No exite la cuenta");
+      break;
+  }
+};
+
+const onFinishFailed = (errorInfo) => {
+  console.log("Failed:", errorInfo);
+};
 </script>
