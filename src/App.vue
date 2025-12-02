@@ -5,13 +5,19 @@
         theme="dark"
         mode="horizontal"
         :style="{ lineHeight: '64px' }"
-        v-model:selectedKeys="selectedKeys"
+         v-model:selectedKeys="selectedKeys"
       >
         <a-menu-item
           v-if="userStore.userData"
           key="home"
         >
           <router-link to="/">Home</router-link>
+        </a-menu-item>
+        <a-menu-item
+          v-if="userStore.userData"
+          key="perfil"
+        >
+          <router-link to="/perfil">Perfil</router-link>
         </a-menu-item>
         <a-menu-item
           v-if="!userStore.userData"
@@ -68,8 +74,7 @@ watch(
   padding: 24px;
   min-height: calc(100vh-64px);
 }
-.text-center{
+.text-center {
   text-align: center;
 }
-
-  </style>
+</style>

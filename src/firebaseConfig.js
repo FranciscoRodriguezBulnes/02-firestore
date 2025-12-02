@@ -13,7 +13,7 @@ const firebaseConfig = {
 
 initializeApp(firebaseConfig);
 const auth = getAuth();
-console.log("Auth (lo pongo yo):", auth);
+// console.log("Auth (lo pongo yo):", auth);
 const db = getFirestore();
 
 export { auth, db };

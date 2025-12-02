@@ -47,7 +47,6 @@ const onFinish = async (values) => {
     layout="vertical"
     :model="formState"
     @finish="onFinish"
-    @finishFailed="onFinishFailed"
   >
     <a-form-item
       name="url"

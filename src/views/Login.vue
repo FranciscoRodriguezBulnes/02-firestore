@@ -62,6 +62,7 @@
 import { reactive, ref } from "vue";
 import { useUserStore } from "../stores/user";
 import { message } from "ant-design-vue";
+import router from '@/router';
 
 const userStore = useUserStore();
 
@@ -85,11 +86,11 @@ const onFinish = async (values) => {
   const error = await userStore.loginUser(formState.email, formState.password);
 
   if (!error) {
-    return message.success(
-      "Bienvenido al concierto, gracias por estar aquí 😃"
-    );
+    message.success("Bienvenido al concierto, gracias por estar aquí 😃");
+    // router.push({ name: "home" });
+    router.push("/");
+    return;
   }
-
   switch (error) {
     case "auth/user-not-found":
       // alert("No existe esa cuenta");

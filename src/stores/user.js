@@ -5,10 +5,12 @@ import {
   sendEmailVerification,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from "firebase/auth";
-import { auth } from "../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
 import router from "../router";
 import { useDatabaseStore } from "./database";
+import { doc, getDoc, setDoc } from "firebase/firestore/lite";
 
 export const useUserStore = defineStore("userStore", {
   state: () => ({
@@ -26,11 +28,57 @@ export const useUserStore = defineStore("userStore", {
         router.push("/login");
       } catch (error) {
         console.log(error.code);
-        return error.code
+        return error.code;
       } finally {
         this.loadingUser = false;
       }
     },
+
+    async updateImg(imagen) {
+      try {
+        console.log(imagen);
+      } catch (error) {
+        console.log(error.code);
+        return error.code;
+      }
+    },
+
+    async updateUser(displayName) {
+      // console.log(displayName);
+      // console.log("Antes:", auth.currentUser.displayName);
+      try {
+        // this.loadingUser = true;
+        await updateProfile(auth.currentUser, {
+          displayName: displayName,
+          // photoURL: photoURL,
+        });
+        this.setUser(auth.currentUser);
+        // console.log("Después:", auth.currentUser.displayName);
+        // console.log("Después Todo el Objeto:", auth.currentUser);
+      } catch (error) {
+        console.log(error.code);
+        return error.code;
+      }
+    },
+
+    async setUser(user) {
+      try {
+        const docRef = doc(db, "users", user.uid);
+        // const docSnap = await getDoc(docRef);
+
+        this.userData = {
+          email: user.email,
+          uid: user.uid,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        };
+
+        await setDoc(docRef, this.userData);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     async loginUser(email, password) {
       this.loadingUser = true;
       try {
@@ -39,23 +87,29 @@ export const useUserStore = defineStore("userStore", {
           email,
           password
         );
-        this.userData = { email: user.email, uid: user.uid };
+
+        await this.setUser(user);
+
         router.push("/");
       } catch (error) {
         console.log(error.code);
-        return error.code
+        return error.code;
       } finally {
         this.loadingUser = false;
       }
-      console.log("Usuario actual:", auth.currentUser?.email, auth.currentUser?.uid);
+      console.log(
+        "Usuario actual:",
+        auth.currentUser?.email,
+        auth.currentUser?.uid
+      );
     },
     async logoutUser() {
       const databaseStore = useDatabaseStore();
       databaseStore.$reset();
       try {
-        await signOut(auth);
-        this.userData = null;
         router.push("/login");
+        await signOut(auth);
+        // this.userData = null;
       } catch (error) {
         console.log(error);
       }
@@ -64,11 +118,16 @@ export const useUserStore = defineStore("userStore", {
       return new Promise((resolve, reject) => {
         const unsuscribe = onAuthStateChanged(
           auth,
-          (user) => {
+          async (user) => {
             if (user) {
+              console.log(user);
+              // await this.setUser(user);
+
               this.userData = {
                 email: user.email,
                 uid: user.uid,
+                displayName: user.displayName,
+                photoURL: user.photoURL,
               };
             } else {
               this.userData = null;

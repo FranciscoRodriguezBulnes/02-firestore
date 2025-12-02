@@ -23,12 +23,13 @@ export const useDatabaseStore = defineStore("database", {
   }),
   actions: {
     async getUrls() {
-      if (this.documents.length !== 0) {
-        return;
-      }
+      // if (this.documents.length !== 0) {
+      //   return;
+      // }
 
       this.loadingDoc = true;
       try {
+        this.documents = [];
         const q = query(
           collection(db, "urls"),
           where("user", "==", auth.currentUser.uid)
