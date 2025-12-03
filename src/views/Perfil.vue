@@ -1,5 +1,21 @@
 <template>
-  <h1>Perfil de usuario</h1>
+  <h1 class="text-center">Perfil de usuario</h1>
+  <!-- Imagen de perfil -->
+  <div style="text-align: center; margin-bottom: 20px">
+    <img
+      :src="userStore.userData?.photoURL"
+      alt="Foto de perfil"
+      style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover"
+    />
+  </div>
+
+  <a-avatar>
+    <img
+      :src="userStore.userData?.photoURL"
+      alt="Foto de perfil"
+    />  
+  </a-avatar>
+
   <p>{{ userStore.userData }}</p>
   <a-row>
     <a-col
@@ -136,6 +152,11 @@ const onFinish = async (value) => {
   // });
   if (fileList.value[0]) {
     const errorImg = await userStore.updateImg(fileList.value[0]);
+    if (errorImg) {
+      return message.error("Error al subir la imagen 😒");
+    } else {
+      message.success("Imagen de perfil actualizada ✔");
+    }   
   }
 
   if (!error) {
