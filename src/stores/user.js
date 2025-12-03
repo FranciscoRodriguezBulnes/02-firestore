@@ -37,7 +37,6 @@ export const useUserStore = defineStore("userStore", {
 
     async updateImg(imagen) {
       try {
-        this.setUser(auth.currentUser);
         console.log(imagen);
         const storageRef = ref(storage, `${this.userData.uid}/perfil`);
         await uploadBytes(storageRef, imagen.originFileObj);
@@ -46,6 +45,7 @@ export const useUserStore = defineStore("userStore", {
           // displayName: displayName,
           photoURL: photoURL,
         });
+        this.setUser(auth.currentUser);
         // console.log("URL de la foto:", photoURL);
       } catch (error) {
         console.log(error.code);
