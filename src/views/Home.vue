@@ -41,6 +41,12 @@
             >
               Editar
             </a-button>
+            <a-button
+              type="primary"
+              @click="copiarPortapapeles(item.id)"
+            >
+              Copiar
+            </a-button>
           </a-space>
         </template>
         <p>{{ item.name }}</p>
@@ -55,7 +61,7 @@ import { useDatabaseStore } from "../stores/database";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 // import AddForm from "../components/AddForm.vue";
-import { message } from "ant-design-vue";
+import {  message } from "ant-design-vue";
 
 const userStore = useUserStore();
 const databaseStore = useDatabaseStore();
@@ -81,5 +87,35 @@ const confirm = async (id) => {
 const cancel = (e) => {
   console.log(e);
   message.error("Cancelada la eliminación 🤳");
+};
+
+const copiarPortapapeles = async (id) => {
+  console.log(id);
+  if (!navigator.clipboard) {
+    return message.error("Tu navegador no soporta el portapapeles 😒");
+  }
+
+  const path = `${window.location.origin}/${id}`;
+
+  console.log(path);
+
+  navigator.clipboard
+    .writeText(path)
+    .then(() => {
+      message.success("¡Copiado al portapapeles! 📋");
+      console.log('Texto copiado')
+    })
+    .catch(() => {
+      message.error("Error al copiar al portapapeles 😒");
+    });
+
+  // try {
+  //   await navigator.clipboard.writeText(
+  //     `${import.meta.env.VITE_APP_URL_BASE}/${id}`
+  //   );
+  //   message.success("¡Copiado al portapapeles! 📋");
+  // } catch (err) {
+  //   message.error("Error al copiar al portapapeles 😒");
+  // }
 };
 </script>

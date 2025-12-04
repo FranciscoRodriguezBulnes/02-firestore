@@ -4,10 +4,13 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     // Colección urls
-    match /urls/{docId} {
-      allow read, write: if request.auth != null
-                         && request.auth.uid == resource.data.user;
-    }
+match /urls/{docId} {
+  allow create: if request.auth != null
+                && request.auth.uid == request.resource.data.user;
+  allow update, delete: if request.auth != null
+                        && request.auth.uid == resource.data.user;
+  allow read: if true;
+}
 
     // Colección users
     match /users/{userId} {

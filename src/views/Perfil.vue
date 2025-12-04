@@ -13,7 +13,7 @@
     <img
       :src="userStore.userData?.photoURL"
       alt="Foto de perfil"
-    />  
+    />
   </a-avatar>
 
   <p>{{ userStore.userData }}</p>
@@ -144,34 +144,20 @@ const handleChange = (info) => {
 
 const onFinish = async (value) => {
   // console.log(fileList.value[0]);
-  const error = await userStore.updateUser(value.displayName);
+  const error = await userStore.updateUser(
+    value.displayName,
+    fileList.value[0]
+  );
 
   // fileList.value.forEach((file) => {
   //   console.log(file);
   //   // formData.append('files[]', file);
   // });
-  if (fileList.value[0]) {
-    const errorImg = await userStore.updateImg(fileList.value[0]);
-    if (errorImg) {
-      return message.error("Error al subir la imagen 😒");
-    } else {
-      message.success("Imagen de perfil actualizada ✔");
-    }   
-  }
 
   if (!error) {
     return message.success("Perfil actualizado correctamente ✔");
   }
-  switch (error) {
-    case "auth/user-not-found":
-      message.error("No exite el usuario 🤷‍♀️");
-      break;
-    case "auth/invalid-display-name":
-      message.error("Nombre de usuario no válido 🤦‍♀️");
-      break;
-    default:
-      message.error("Otro tipo de error en el servidor 😒");
-      break;
-  }
+
+  message.error("Ocurrió un error al actualizar el prefil 😒");
 };
 </script>

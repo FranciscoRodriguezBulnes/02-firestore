@@ -5,7 +5,7 @@
         theme="dark"
         mode="horizontal"
         :style="{ lineHeight: '64px' }"
-         v-model:selectedKeys="selectedKeys"
+        v-model:selectedKeys="selectedKeys"
       >
         <a-menu-item
           v-if="userStore.userData"
@@ -45,7 +45,7 @@
     <a-layout-content style="padding: 0 50px">
       <div class="container">
         <div v-if="userStore.loadingSession">loading user...</div>
-        <router-view></router-view>
+        <router-view v-else></router-view>
       </div>
     </a-layout-content>
   </a-layout>
